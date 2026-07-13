@@ -4,13 +4,13 @@ name: Deploy Lambda Pipeline
 on:
   push:
     branches:
-      - main
+      - main 
 
 # STEP 2: Set Up the Environment (The runner machine)
 jobs:
   deploy-pipeline:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-latest 
+   
     steps:
       # STEP 3: Run the Tests & Prep Code
       - name: Check out repository code
