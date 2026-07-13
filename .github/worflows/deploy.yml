@@ -4,7 +4,7 @@ name: Deploy Lambda Pipeline
 on:
   push:
     branches:
-      - main 
+      - '**'
 
 # STEP 2: Set Up the Environment (The runner machine)
 jobs:
