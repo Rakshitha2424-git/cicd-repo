@@ -1,0 +1,38 @@
+name: Deploy Lambda Pipeline
+
+# STEP 1: Define the Trigger (When to run)
+on:
+  push:
+    branches:
+      - main
+
+# STEP 2: Set Up the Environment (The runner machine)
+jobs:
+  deploy-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      # STEP 3: Run the Tests & Prep Code
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # This packages your code and any requirements together into a zip file
+      - name: Package Lambda Function
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt -t .; fi
+          zip -r lambda_function.zip .
+
+      # STEP 4: Deploy to AWS Cloud (The CD part)
+      - name: Push to AWS Lambda
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-east-1
+          function_name: de-sales-ingestion-handler
+          zip_file: lambda_function.zip
